@@ -1,0 +1,40 @@
+name: stan-moodle
+
+services:
+  database:
+    container_name: moodle_db
+    image: postgres:14.9
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - moodle-net
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+  web:
+    container_name: php_for_moodle
+    image: php:8.3.23-apache
+    restart: always
+    networks:
+      - moodle-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    volumes:
+      - ./moodle:/var/www/html
+
+volumes:
+  pgdata:
+
+networks:
+  moodle-net:
+    driver: bridge
