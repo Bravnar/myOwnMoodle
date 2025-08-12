@@ -1,0 +1,4 @@
+[submodule "moodle/srcs"]
+	path = moodle/srcs
+	url = https://github.com/moodle/moodle.gt
+	branch = MOODLE_500_STABLE

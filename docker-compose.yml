@@ -3,7 +3,7 @@ name: stan-moodle
 services:
   database:
     container_name: moodle_db
-    image: postgres:14.9
+    image: postgres:14.18
     restart: always
     env_file:
       - .env
@@ -19,18 +19,23 @@ services:
       start_period: 40s
   web:
     container_name: php_for_moodle
-    image: php:8.3.23-apache
+    build:
+      context: ./moodle
     restart: always
+    volumes:
+      - ./moodle/srcs:/var/www/html
+      - ./moodledata:/var/www/moodledata
+      - ./php-conf/moodle.ini:/usr/local/etc/php/conf.d/moodle.ini:ro
     networks:
       - moodle-net
+    ports:
+      - "8080:80"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-    volumes:
-      - ./moodle:/var/www/html
 
 volumes:
   pgdata:

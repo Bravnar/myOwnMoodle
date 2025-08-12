@@ -1,0 +1,4 @@
+.env
+.gitignore
+moodledata
+moodle/srcs/config.php
